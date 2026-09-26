@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tasks</title>
+<meta name="description" content="A task management app with accounts, live-syncing boards, and due dates." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="paper-overlay" aria-hidden="true"></div>
+
+<!-- ===== Auth screen ===== -->
+<section id="auth-screen" class="auth-screen">
+  <div class="auth-card">
+    <p class="brand">Tasks</p>
+    <h1 id="auth-title">Welcome back</h1>
+
+    <form id="login-form" class="auth-form">
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" required autocomplete="current-password" />
+      </div>
+      <p class="auth-error" id="login-error" role="alert"></p>
+      <button type="submit" class="btn btn-primary">Log in</button>
+    </form>
+
+    <form id="register-form" class="auth-form hidden">
+      <div class="field">
+        <label for="register-name">Name</label>
+        <input type="text" id="register-name" required autocomplete="name" />
+      </div>
+      <div class="field">
+        <label for="register-email">Email</label>
+        <input type="email" id="register-email" required autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="register-password">Password</label>
+        <input type="password" id="register-password" required minlength="8" autocomplete="new-password" />
+        <span class="hint">At least 8 characters</span>
+      </div>
+      <p class="auth-error" id="register-error" role="alert"></p>
+      <button type="submit" class="btn btn-primary">Create account</button>
+    </form>
+
+    <button id="auth-toggle" class="link-btn">Need an account? Sign up</button>
+  </div>
+</section>
+
+<!-- ===== Task board ===== -->
+<div id="app-screen" class="app-screen hidden">
+
+  <header class="topbar">
+    <span class="brand">Tasks</span>
+    <div class="topbar-right">
+      <span id="user-name" class="user-name"></span>
+      <span class="sync-dot" id="sync-dot" title="Live sync status"></span>
+      <button id="logout-btn" class="link-btn">Log out</button>
+    </div>
+  </header>
+
+  <main class="board-wrap">
+    <div class="board-head">
+      <h1>Your tasks</h1>
+      <button id="new-task-btn" class="btn btn-primary">+ New task</button>
+    </div>
+
+    <div class="board" id="board">
+      <div class="column" data-status="todo">
+        <div class="column-head"><h2>To do</h2><span class="count" id="count-todo">0</span></div>
+        <div class="column-body" id="col-todo"></div>
+      </div>
+      <div class="column" data-status="in_progress">
+        <div class="column-head"><h2>In progress</h2><span class="count" id="count-in_progress">0</span></div>
+        <div class="column-body" id="col-in_progress"></div>
+      </div>
+      <div class="column" data-status="done">
+        <div class="column-head"><h2>Done</h2><span class="count" id="count-done">0</span></div>
+        <div class="column-body" id="col-done"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===== Task editor modal ===== -->
+<div id="task-modal" class="modal hidden">
+  <div class="modal-card">
+    <h2 id="modal-title">New task</h2>
+    <form id="task-form">
+      <input type="hidden" id="task-id" />
+      <div class="field">
+        <label for="task-title">Title</label>
+        <input type="text" id="task-title" required />
+      </div>
+      <div class="field">
+        <label for="task-description">Description</label>
+        <textarea id="task-description" rows="3"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="task-priority">Priority</label>
+          <select id="task-priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="task-due">Due date</label>
+          <input type="date" id="task-due" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="task-status">Status</label>
+        <select id="task-status">
+          <option value="todo">To do</option>
+          <option value="in_progress">In progress</option>
+          <option value="done">Done</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="delete-task-btn" class="btn btn-danger hidden">Delete</button>
+        <div class="modal-actions-right">
+          <button type="button" id="cancel-task-btn" class="btn btn-ghost">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
